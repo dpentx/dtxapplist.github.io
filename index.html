@@ -1,1104 +1,686 @@
 <!DOCTYPE html>
-<html lang="tr" data-theme="dark">
-
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linux App Hub - Analytics Powered</title>
-    <meta name="description" content="Popüler uygulamaların Linux desteğini keşfedin - En popüler uygulamaları takip edin">
-    
-    <!-- Vercel Analytics - Bu satırları ekleyin -->
-    <script>
-        window.va = window.va || function () { 
-            (window.vaq = window.vaq || []).push(arguments); 
-        };
-    </script>
-    <script defer src="https://va.vercel-scripts.com/v1/script.js"></script>
-    
+    <title>Linux App Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* Critical CSS */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         :root {
-            --bg-primary: linear-gradient(135deg, #0f0f23, #1a1a2e, #16213e);
-            --bg-secondary: rgba(255, 255, 255, 0.08);
-            --bg-tertiary: rgba(255, 255, 255, 0.05);
-            --text-primary: #e4e4e7;
-            --text-secondary: #a1a1aa;
-            --text-muted: #71717a;
-            --border-color: rgba(255, 255, 255, 0.12);
-            --border-muted: rgba(255, 255, 255, 0.1);
-            --accent-primary: #8b5cf6;
-            --accent-secondary: #06b6d4;
-            --accent-success: #10b981;
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --backdrop-blur: blur(20px);
+            --bg:       #2d353b;
+            --bg-dark:  #232a2e;
+            --bg-light: #343f44;
+            --bg-card:  #3d4a51;
+            --text:     #d3c6aa;
+            --text-dim: #859289;
+            --green:    #a7c080;
+            --blue:     #7fbbb3;
+            --red:      #e67e80;
+            --yellow:   #dbbc7f;
+            --orange:   #e69875;
+            --border:   rgba(167,192,128,.15);
         }
 
-        [data-theme="light"] {
-            --bg-primary: linear-gradient(135deg, #f8fafc, #e2e8f0, #cbd5e1);
-            --bg-secondary: rgba(255, 255, 255, 0.9);
-            --bg-tertiary: rgba(255, 255, 255, 0.7);
-            --text-primary: #1e293b;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-            --border-color: rgba(0, 0, 0, 0.1);
-            --border-muted: rgba(0, 0, 0, 0.05);
-            --accent-primary: #7c3aed;
-            --accent-secondary: #0284c7;
-            --accent-success: #059669;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --backdrop-blur: blur(10px);
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            overflow-x: hidden;
-            transition: all 0.3s ease;
+            line-height: 1.6;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            position: relative;
-        }
-
-        .header {
+        /* ── HEADER ── */
+        header {
             text-align: center;
-            margin-bottom: 60px;
+            padding: 3.5rem 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        header h1 {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--green);
+            letter-spacing: -.02em;
+            margin-bottom: .4rem;
+        }
+
+        header p {
+            color: var(--text-dim);
+            font-size: .9rem;
+        }
+
+        /* ── SEARCH ── */
+        .search-wrap {
+            max-width: 560px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
             position: relative;
-        }
-
-        .header-controls {
-            position: absolute;
-            top: 0;
-            right: 0;
-            display: flex;
-            gap: 12px;
-        }
-
-        .theme-toggle {
-            width: 50px;
-            height: 50px;
-            border: 2px solid var(--border-color);
-            border-radius: 50%;
-            background: var(--bg-secondary);
-            backdrop-filter: var(--backdrop-blur);
-            color: var(--text-primary);
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 24px var(--shadow-color);
-        }
-
-        .theme-toggle:hover {
-            transform: translateY(-2px) scale(1.05);
-            border-color: var(--accent-primary);
-            box-shadow: 0 12px 32px var(--shadow-color);
-        }
-
-        h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-success));
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 16px;
-            letter-spacing: -0.02em;
-            text-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-            margin-bottom: 40px;
-        }
-
-        .search-container {
-            position: relative;
-            max-width: 500px;
-            margin: 0 auto 20px;
         }
 
         #search {
             width: 100%;
-            padding: 20px 100px 20px 60px;
-            border: 2px solid rgba(139, 92, 246, 0.2);
-            border-radius: 25px;
-            background: var(--bg-tertiary);
-            backdrop-filter: var(--backdrop-blur);
-            color: var(--text-primary);
-            font-size: 16px;
+            padding: .85rem 1rem .85rem 2.8rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: .95rem;
             outline: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 32px var(--shadow-color);
+            transition: border-color .2s;
         }
 
-        #search:focus {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1), 0 12px 40px var(--shadow-color);
-        }
+        #search::placeholder { color: var(--text-dim); }
+
+        #search:focus { border-color: var(--green); }
 
         .search-icon {
             position: absolute;
-            left: 20px;
+            left: 2rem;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--accent-primary);
-            font-size: 20px;
+            color: var(--text-dim);
+            font-size: 1rem;
+            pointer-events: none;
         }
 
-        .advanced-search-toggle {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-            font-size: 16px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .advanced-search-toggle:hover {
-            color: var(--accent-primary);
-            background: var(--bg-tertiary);
-        }
-
-        .advanced-search {
-            max-width: 800px;
-            margin: 0 auto 40px;
-            background: var(--bg-secondary);
-            backdrop-filter: var(--backdrop-blur);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 24px;
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.4s ease;
-        }
-
-        .advanced-search.active {
-            opacity: 1;
-            max-height: 500px;
-            margin-bottom: 40px;
-        }
-
-        /* Kategori Filtreleri - Ana konteyner */
-        #category-filters {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 40px;
-            padding: 24px;
-            background: var(--bg-secondary);
-            backdrop-filter: var(--backdrop-blur);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .filter-btn {
-            padding: 8px 16px;
-            border: 1px solid var(--border-muted);
-            border-radius: 20px;
-            background: var(--bg-tertiary);
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            user-select: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .filter-btn:hover {
-            background: rgba(139, 92, 246, 0.1);
-            color: var(--accent-primary);
-            border-color: var(--accent-primary);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
-        }
-
-        .filter-btn.active {
-            background: var(--accent-primary);
-            color: white;
-            border-color: var(--accent-primary);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-            transform: translateY(-1px);
-        }
-
-        .filter-btn .count {
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 2px 6px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            margin-left: 4px;
-        }
-
-        .filter-btn.active .count {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 32px;
-            margin-bottom: 50px;
-            flex-wrap: wrap;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 16px 24px;
-            background: var(--bg-tertiary);
-            border-radius: 16px;
-            backdrop-filter: var(--backdrop-blur);
-            border: 1px solid var(--border-muted);
-            width: 100px;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-
-        /* Popüler uygulamalar butonu için özel stiller */
-        .stat-item.popular-btn {
-            cursor: pointer;
-            border: 2px solid transparent;
-            background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
-        }
-
-        .stat-item.popular-btn:hover {
-            transform: translateY(-4px) scale(1.05);
-            border-color: var(--accent-primary);
-            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.3);
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), var(--bg-secondary));
-        }
-
-        .stat-item.popular-btn:active {
-            transform: translateY(-2px) scale(1.02);
-        }
-
-        .stat-item.popular-btn .stat-number {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 900;
-        }
-
-        .stat-icon {
-            font-size: 1.5rem;
-            line-height: 1;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--accent-primary);
-            display: block;
-            line-height: 1;
+        /* ── APP GRID ── */
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
         }
 
         #app-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 24px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
         }
 
+        /* ── CARD ── */
         .card {
-            background: var(--bg-secondary);
-            backdrop-filter: var(--backdrop-blur);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 24px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem 1.25rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: .75rem;
+            transition: border-color .2s, transform .2s;
+            cursor: default;
         }
 
         .card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.25);
-            border-color: rgba(139, 92, 246, 0.4);
+            border-color: rgba(167,192,128,.35);
+            transform: translateY(-2px);
         }
 
-        .card-header {
+        .card-head {
             display: flex;
             align-items: center;
-            margin-bottom: 16px;
+            gap: .85rem;
         }
 
-        .card img, .card-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            margin-right: 16px;
-            box-shadow: 0 8px 24px var(--shadow-color);
-            transition: transform 0.2s ease;
+        .card-head img, .card-icon-fallback {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
             flex-shrink: 0;
+            object-fit: contain;
+            background: var(--bg-dark);
+            padding: 4px;
         }
 
-        .card:hover img, .card:hover .card-icon {
-            transform: scale(1.1);
-        }
-
-        .card-icon {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        .card-icon-fallback {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: white;
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--green);
         }
 
-        .card-info {
-            flex: 1;
+        .card-info { flex: 1; min-width: 0; }
+
+        .card-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .app-name {
-            font-weight: 700;
-            font-size: 1.25rem;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-        }
-
-        .app-category {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            font-weight: 500;
-            padding: 2px 8px;
-            background: rgba(139, 92, 246, 0.1);
-            border-radius: 12px;
-            display: inline-block;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-        }
-
-        .status {
+        .badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            text-transform: uppercase;
+            gap: .3rem;
+            font-size: .72rem;
+            font-family: 'IBM Plex Mono', monospace;
+            padding: .15rem .5rem;
+            border-radius: 4px;
+            margin-top: .25rem;
         }
 
-        .status.green {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
-            color: var(--accent-success);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
+        .badge.supported   { background: rgba(167,192,128,.12); color: var(--green); }
+        .badge.alternative { background: rgba(219,188,127,.12); color: var(--yellow); }
+        .badge.unsupported { background: rgba(230,126,128,.12); color: var(--red); }
 
-        .status.red {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
-            color: #ef4444;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
-        .status.orange {
-            background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.1));
-            color: #f97316;
-            border: 1px solid rgba(249, 115, 22, 0.3);
-        }
-
+        /* ── CARD ACTIONS ── */
         .card-actions {
             display: flex;
-            gap: 12px;
-            margin-top: 20px;
+            gap: .5rem;
             justify-content: flex-end;
         }
 
-        .action-btn {
-            width: 44px;
-            height: 44px;
+        .btn {
+            padding: .42rem .9rem;
             border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .install-btn {
-            background: linear-gradient(135deg, var(--accent-success), #059669);
-            color: white;
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
-        }
-
-        .install-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
-        }
-
-        .about-btn {
-            background: linear-gradient(135deg, var(--accent-secondary), #0891b2);
-            color: white;
-            box-shadow: 0 4px 16px rgba(6, 182, 212, 0.3);
-        }
-
-        .about-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(6, 182, 212, 0.4);
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 80px 20px;
-            color: var(--text-secondary);
-            grid-column: 1 / -1;
-        }
-
-        .no-results-icon {
-            font-size: 4rem;
-            margin-bottom: 16px;
-            opacity: 0.3;
-        }
-
-        .no-results h3 {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-            color: var(--text-muted);
-        }
-
-        /* Loading indicator */
-        .loading-indicator {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 200px;
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--border-color);
-            border-radius: 50%;
-            border-top-color: var(--accent-primary);
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 16px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Analytics Notification */
-        .analytics-notice {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: var(--bg-secondary);
-            backdrop-filter: var(--backdrop-blur);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            z-index: 1000;
-            max-width: 300px;
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .analytics-notice.show {
-            transform: translateX(0);
-        }
-
-        .analytics-notice .close-btn {
-            float: right;
-            margin-left: 10px;
-            cursor: pointer;
-            color: var(--accent-primary);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container { padding: 20px 16px; }
-            .header-controls { 
-                position: relative; 
-                margin-bottom: 20px; 
-                justify-content: center; 
-            }
-            #category-filters {
-                padding: 16px;
-                margin-bottom: 30px;
-                gap: 6px;
-                justify-content: flex-start;
-                max-height: 200px;
-                overflow-y: auto;
-            }
-            .filter-btn {
-                padding: 6px 12px;
-                font-size: 0.8rem;
-            }
-            #app-list {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            .card {
-                padding: 20px;
-                border-radius: 16px;
-            }
-            .stats {
-                gap: 16px;
-            }
-            .stat-item {
-                width: 80px;
-                padding: 12px 16px;
-            }
-            .analytics-notice {
-                left: 10px;
-                right: 10px;
-                max-width: none;
-                transform: translateY(100%);
-            }
-            .analytics-notice.show {
-                transform: translateY(0);
-            }
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--bg-secondary);
-            backdrop-filter: var(--backdrop-blur);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 16px 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 12px 40px var(--shadow-color);
-            transform: translateX(400px);
-            transition: all 0.4s ease;
-            z-index: 1001;
-        }
-
-        .toast.show {
-            transform: translateX(0);
-        }
-
-        /* Popup Modal */
-        .popup {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: var(--backdrop-blur);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .popup.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .popup.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .popup-content {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            max-width: 800px;
-            max-height: 90vh;
-            width: 90%;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-
-        .popup.visible .popup-content {
-            transform: scale(1);
-        }
-
-        .popup-header {
-            padding: 24px;
-            border-bottom: 1px solid var(--border-muted);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .popup-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin: 0;
-        }
-
-        .popup-close {
-            width: 40px;
-            height: 40px;
-            border: none;
-            background: var(--bg-tertiary);
-            border-radius: 50%;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .popup-close:hover {
-            background: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
-            transform: scale(1.1);
-        }
-
-        .popup-body {
-            padding: 24px;
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-
-        .tab-buttons {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .tab-button {
-            padding: 8px 16px;
-            border: 1px solid var(--border-muted);
-            border-radius: 20px;
-            background: var(--bg-tertiary);
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 0.875rem;
+            border-radius: 6px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: .78rem;
             font-weight: 500;
-            transition: all 0.2s ease;
+            cursor: pointer;
+            transition: opacity .15s, transform .15s;
         }
 
-        .tab-button.active {
-            background: var(--accent-primary);
-            color: white;
-            border-color: var(--accent-primary);
-        }
+        .btn:hover  { opacity: .85; transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
 
-        .tab-button:hover:not(.active) {
-            background: rgba(139, 92, 246, 0.1);
-            color: var(--accent-primary);
-            border-color: var(--accent-primary);
-        }
+        .btn-install { background: var(--green);  color: var(--bg-dark); }
+        .btn-info    { background: var(--blue);   color: var(--bg-dark); }
 
-        .tab-content {
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 16px;
-            position: relative;
-            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            white-space: pre-wrap;
-            word-break: break-word;
-            border: 1px solid var(--border-muted);
-        }
-
-        .tab-content.about-content {
-            font-family: inherit;
+        /* ── NO RESULTS ── */
+        .no-results {
+            grid-column: 1/-1;
             text-align: center;
+            padding: 4rem 1rem;
+            color: var(--text-dim);
         }
 
-        .tab-content.reason-content {
-            font-family: inherit;
+        .no-results span { font-size: 2rem; display: block; margin-bottom: .75rem; }
+
+        /* ── MODAL ── */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(35,42,46,.88);
+            backdrop-filter: blur(6px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal-backdrop.open { display: flex; }
+
+        .modal {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 620px;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalIn .22s ease;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(12px) scale(.97); }
+            to   { opacity: 1; transform: translateY(0)     scale(1);   }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.4rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-header img, .modal-header-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            flex-shrink: 0;
+            object-fit: contain;
+            background: var(--bg-dark);
+            padding: 5px;
+        }
+
+        .modal-header-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--green);
+        }
+
+        .modal-title { font-weight: 600; font-size: 1.1rem; color: var(--text); }
+
+        .modal-close {
+            margin-left: auto;
+            background: var(--red);
+            color: #fff;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform .15s;
+        }
+
+        .modal-close:hover { transform: scale(1.1); }
+
+        .modal-body { padding: 1.25rem 1.5rem 1.5rem; }
+
+        /* TABS */
+        .tabs { display: flex; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+
+        .tab-btn {
+            padding: .4rem .9rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-light);
+            color: var(--text-dim);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: .78rem;
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .tab-btn:hover  { border-color: var(--green); color: var(--green); }
+        .tab-btn.active { background: var(--green); color: var(--bg-dark); border-color: var(--green); }
+
+        /* CODE BLOCK */
+        .code-block {
+            position: relative;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 3rem 1rem 1rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: .82rem;
+            color: var(--yellow);
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.7;
         }
 
         .copy-btn {
             position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 32px;
-            height: 32px;
-            border: none;
-            background: rgba(139, 92, 246, 0.1);
-            border-radius: 8px;
-            color: var(--accent-primary);
+            top: .6rem;
+            right: .6rem;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            color: var(--text-dim);
+            font-size: .75rem;
+            font-family: 'IBM Plex Mono', monospace;
+            padding: .25rem .55rem;
             cursor: pointer;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            z-index: 10;
+            transition: all .15s;
         }
 
-        .copy-btn:hover {
-            background: var(--accent-primary);
-            color: white;
-            transform: scale(1.1);
-        }
+        .copy-btn:hover { border-color: var(--green); color: var(--green); }
 
-        .screenshot {
+        /* SCREENSHOT */
+        .screenshot-wrap { text-align: center; }
+
+        .screenshot-wrap img {
             max-width: 100%;
-            height: auto;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px var(--shadow-color);
+            border-radius: 8px;
+            border: 1px solid var(--border);
         }
 
+        .screenshot-wrap .no-ss {
+            padding: 2.5rem 1rem;
+            color: var(--text-dim);
+            font-size: .9rem;
+        }
+
+        /* WEBSITE LINK */
         .website-link {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-muted);
-            border-radius: 12px;
-            color: var(--accent-secondary);
+            gap: .5rem;
+            margin-top: 1rem;
+            padding: .55rem 1rem;
+            background: var(--blue);
+            color: var(--bg-dark);
+            border-radius: 6px;
             text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s ease;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: .82rem;
+            font-weight: 600;
+            transition: opacity .15s;
         }
 
-        .website-link:hover {
-            background: rgba(6, 182, 212, 0.1);
-            border-color: var(--accent-secondary);
-            transform: translateY(-2px);
+        .website-link:hover { opacity: .85; }
+
+        /* ALTERNATIVES */
+        .alt-item {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--yellow);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: .75rem;
         }
 
-        .alternative-container {
-            margin-bottom: 32px;
-            padding: 20px;
-            background: var(--bg-tertiary);
-            border-radius: 16px;
-            border: 1px solid var(--border-muted);
+        .alt-item h4 { color: var(--yellow); margin-bottom: .3rem; font-size: .95rem; }
+        .alt-item p  { color: var(--text-dim); font-size: .85rem; margin-bottom: .5rem; }
+
+        /* UNSUPPORTED REASON */
+        .reason-block {
+            background: var(--bg-dark);
+            border-left: 3px solid var(--red);
+            border-radius: 8px;
+            padding: 1rem;
+            color: var(--text-dim);
+            font-size: .88rem;
         }
 
-        .alternative-header h3 {
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            font-size: 1.25rem;
-        }
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 3px; }
 
-        .alternative-header p {
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
-
-        .loading-message, .error-message {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-secondary);
-            font-style: italic;
-        }
-
-        .error-message {
-            color: #ef4444;
-        }
-
-        @media (max-width: 768px) {
-            .popup-content {
-                width: 95%;
-                max-height: 95vh;
-            }
-            
-            .popup-header {
-                padding: 16px;
-            }
-            
-            .popup-body {
-                padding: 16px;
-                max-height: 70vh;
-            }
-            
-            .tab-buttons {
-                gap: 4px;
-            }
-            
-            .tab-button {
-                padding: 6px 12px;
-                font-size: 0.8rem;
-            }
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.5rem; }
+            #app-list  { grid-template-columns: 1fr; }
+            .modal     { max-height: 95vh; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-controls">
-                <button id="theme-toggle" class="theme-toggle" title="Tema Değiştir">
-                    <span class="theme-icon">🌙</span>
-                </button>
-            </div>
-            <h1>Linux App Hub</h1>
-            <p class="subtitle">Popüler uygulamaların Linux desteğini keşfedin - En popüler uygulamaları takip edin</p>
-        </div>
-        
-        <div class="search-container">
-            <div class="search-icon">🔍</div>
-            <input type="text" id="search" placeholder="Uygulama, açıklama veya tag ara...">
-            <div id="advanced-toggle" class="advanced-search-toggle" title="Gelişmiş Arama">⚙️</div>
-        </div>
 
-        <!-- Gelişmiş arama paneli -->
-        <div id="advanced-search" class="advanced-search">
-            <div class="search-filters">
-                <div class="filter-group">
-                    <label>Durum Filtresi:</label>
-                    <div class="filter-buttons">
-                        <button class="filter-btn active" data-filter="all">Tümü</button>
-                        <button class="filter-btn" data-filter="supported">Desteklenen</button>
-                        <button class="filter-btn" data-filter="alternatives">Alternatifleri Olan</button>
-                        <button class="filter-btn" data-filter="unsupported">Desteklenmeyen</button>
-                    </div>
+<header>
+    <h1>Linux App Hub</h1>
+    <p>Popüler uygulamaların Linux desteğini keşfet</p>
+</header>
+
+<div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="search" placeholder="Uygulama ara…" autocomplete="off" spellcheck="false">
+</div>
+
+<main>
+    <div id="app-list"></div>
+</main>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal" id="modal" role="dialog" aria-modal="true">
+        <div class="modal-header">
+            <div id="modal-icon"></div>
+            <span class="modal-title" id="modal-title"></span>
+            <button class="modal-close" id="modal-close" aria-label="Kapat">✕</button>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+</div>
+
+<script src="./assest/app/apps.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════════
+   apps değişkeni apps.js dosyasından gelir
+   ══════════════════════════════════════════════════════════ */
+const listEl = document.getElementById('app-list');
+
+function statusBadge(app) {
+    if (app.supported)              return ['supported',   '✓ Destekleniyor'];
+    if (app.alternatives?.length)   return ['alternative', '⚠ Alternatif Var'];
+    return                                  ['unsupported', '✗ Desteklenmiyor'];
+}
+
+function createIcon(app, size = 44) {
+    const img = document.createElement('img');
+    img.src    = app.icon;
+    img.alt    = app.name;
+    img.width  = size;
+    img.height = size;
+    img.onerror = () => {
+        const fb = document.createElement('div');
+        fb.className = 'card-icon-fallback';
+        fb.style.width = fb.style.height = size + 'px';
+        fb.style.minWidth = size + 'px';
+        fb.textContent = app.name[0];
+        img.replaceWith(fb);
+    };
+    return img;
+}
+
+function renderCards(list) {
+    listEl.innerHTML = '';
+
+    if (!list.length) {
+        listEl.innerHTML = '<div class="no-results"><span>◌</span>Uygulama bulunamadı.</div>';
+        return;
+    }
+
+    list.forEach(app => {
+        const [cls, label] = statusBadge(app);
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <div class="card-head">
+                <div class="card-img-slot"></div>
+                <div class="card-info">
+                    <div class="card-name">${app.name}</div>
+                    <span class="badge ${cls}">${label}</span>
                 </div>
             </div>
-        </div>
+            <div class="card-actions">
+                ${app.supported ? `<button class="btn btn-install" data-action="install" title="Kurulum">$ install</button>` : ''}
+                <button class="btn btn-info" data-action="info" title="Bilgi / Ekran Görüntüsü">info</button>
+            </div>`;
 
-        <!-- Ana kategori filtreleri -->
-        <div id="category-filters">
-            <button class="filter-btn active" data-category="all">Tümü <span class="count">(0)</span></button>
-        </div>
+        card.querySelector('.card-img-slot').appendChild(createIcon(app));
 
-        <div class="stats" id="stats">
-            <div class="stat-item">
-                <span class="stat-icon">✅</span>
-                <span class="stat-number" id="supported-count">0</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-icon">❌</span>
-                <span class="stat-number" id="unsupported-count">0</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-icon">🗄️</span>
-                <span class="stat-number" id="total-count">0</span>
-            </div>
-            <!-- Popüler uygulamalar butonu analytics.js tarafından otomatik eklenecek -->
-        </div>
+        card.querySelector('[data-action="info"]')
+            .addEventListener('click', () => openModal(app, 'info'));
 
-        <!-- Loading indicator -->
-        <div id="loading-indicator" class="loading-indicator">
-            <div class="spinner"></div>
-            <span>Analytics sistemi ile yükleniyor...</span>
-        </div>
-
-        <div id="app-list"></div>
-    </div>
-
-    <!-- Toast Bildirimi -->
-    <div id="toast" class="toast">
-        <span class="toast-icon">✅</span>
-        <span class="toast-message">Test mesajı!</span>
-    </div>
-
-    <!-- Ana Popup Modal -->
-    <div id="popup" class="popup hidden">
-        <div class="popup-content">
-            <div class="popup-header">
-                <h2 id="popup-title" class="popup-title">Başlık</h2>
-                <button id="popup-close" class="popup-close">&times;</button>
-            </div>
-            <div class="popup-body">
-                <div id="popup-instructions"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Analytics Notice -->
-    <div id="analytics-notice" class="analytics-notice">
-        <span class="close-btn" onclick="this.parentElement.classList.remove('show')">&times;</span>
-        📊 Bu site Vercel Analytics kullanarak anonim kullanım verilerini toplar
-    </div>
-
-    <!-- Load the optimized loader script with analytics -->
-    <script src="assest/loader.js"></script>
-    
-    <script>
-        // Show analytics notice after a delay
-        setTimeout(() => {
-            const notice = document.getElementById('analytics-notice');
-            if (notice) {
-                notice.classList.add('show');
-                // Auto hide after 10 seconds
-                setTimeout(() => {
-                    notice.classList.remove('show');
-                }, 10000);
-            }
-        }, 3000);
-        
-        // Development mode indicator
-        if (window.location.hostname === 'localhost' || 
-            window.location.hostname === '127.0.0.1' || 
-            window.location.hostname.includes('192.168.')) {
-            
-            console.log('🧪 Development Mode - Analytics test data will be generated');
-            document.title += ' (Dev Mode)';
+        if (app.supported) {
+            card.querySelector('[data-action="install"]')
+                .addEventListener('click', () => openModal(app, 'install'));
         }
-    </script>
-    <script>
-   // Debug ve test fonksiyonları
-   document.addEventListener('DOMContentLoaded', function() {
-       console.log('🔧 DOM yüklendi, popüler buton kontrolü başlatılıyor...');
-       
-       // 2 saniye sonra buton kontrolü
-       setTimeout(() => {
-           const button = document.getElementById('popular-apps-btn');
-           console.log('🔍 Popüler buton durumu:', {
-               found: !!button,
-               className: button?.className,
-               clickable: button?.style.cursor,
-               visible: button ? window.getComputedStyle(button).visibility : 'N/A'
-           });
-           
-           if (button) {
-               console.log('✅ Buton bulundu, test tıklamaya hazır');
-               console.log('🧪 Konsola "testPopularButton()" yazarak test edebilirsiniz');
-           } else {
-               console.warn('❌ Popüler buton bulunamadı, manuel başlatma deneyin:');
-               console.log('🔧 Konsola "manualInitPopularButton()" yazın');
-           }
-       }, 2000);
-       
-       // 5 saniye sonra analytics verilerini kontrol et
-       setTimeout(() => {
-           if (window.AnalyticsSystem) {
-               const popularApps = window.AnalyticsSystem.getPopularApps();
-               console.log('📊 Analytics durumu:', {
-                   system: 'loaded',
-                   popularAppsCount: popularApps.length,
-                   apps: popularApps.slice(0, 3).map(app => app.name)
-               });
-               
-               // Eğer test modunda ise ve popüler app yoksa, test verisi oluştur
-               if (popularApps.length === 0 && 
-                   (window.location.hostname === 'localhost' || 
-                    window.location.hostname === '127.0.0.1')) {
-                   
-                   console.log('🧪 Test verisi oluşturuluyor...');
-                   window.AnalyticsSystem.trackAppView('Discord', 'view');
-                   window.AnalyticsSystem.trackAppView('Visual Studio Code', 'install');
-                   window.AnalyticsSystem.trackAppView('Spotify', 'about');
-                   
-                   setTimeout(() => {
-                       window.AnalyticsSystem.updatePopularButton();
-                       console.log('🧪 Test verisi oluşturuldu ve buton güncellendi');
-                   }, 1000);
-               }
-           } else {
-               console.warn('❌ Analytics System yüklenmedi');
-           }
-       }, 5000);
-   });
-   
-   // Keyboard shortcuts for testing
-   document.addEventListener('keydown', function(e) {
-       // Ctrl + Shift + P: Show popular apps
-       if (e.ctrlKey && e.shiftKey && e.key === 'P') {
-           e.preventDefault();
-           console.log('🔥 Keyboard shortcut: Popüler uygulamalar');
-           if (window.AnalyticsSystem) {
-               window.AnalyticsSystem.showPopularAppsPopup();
-           }
-       }
-       
-       // Ctrl + Shift + T: Test popular button
-       if (e.ctrlKey && e.shiftKey && e.key === 'T') {
-           e.preventDefault();
-           console.log('🧪 Keyboard shortcut: Test buton');
-           const button = document.getElementById('popular-apps-btn');
-           if (button) {
-               button.click();
-           } else {
-               console.warn('❌ Buton bulunamadı');
-           }
-       }
-   });
-   
-   // Click tracking for all elements (debug)
-   document.addEventListener('click', function(e) {
-       if (e.target.id === 'popular-apps-btn' || e.target.closest('#popular-apps-btn')) {
-           console.log('🎯 Popüler buton tıklandı!', {
-               target: e.target,
-               closest: e.target.closest('#popular-apps-btn'),
-               timestamp: Date.now()
-           });
-       }
-   }, true); // Use capture phase to catch all clicks
-   
-   // Manual functions for console testing
-   window.testPopularButton = function() {
-       const button = document.getElementById('popular-apps-btn');
-       if (button) {
-           console.log('🧪 Test tıklama başlatılıyor...');
-           button.click();
-       } else {
-           console.error('❌ Popüler buton bulunamadı');
-       }
-   };
-   
-   window.debugPopularSystem = function() {
-       console.log('🔍 Popüler sistem debug:', {
-           analytics: !!window.AnalyticsSystem,
-           button: !!document.getElementById('popular-apps-btn'),
-           popularApps: window.AnalyticsSystem?.getPopularApps?.()?.length || 0,
-           stats: document.getElementById('stats'),
-           popup: document.getElementById('popular-apps-popup')
-       });
-   };
-   
-   window.forceShowPopular = function() {
-       if (window.AnalyticsSystem) {
-           console.log('🔧 Force show popular apps...');
-           window.AnalyticsSystem.showPopularAppsPopup();
-       }
-   };
-   
-   console.log('🔧 Debug sistemi yüklendi. Test komutları:');
-   console.log('   testPopularButton() - Butonu test et');
-   console.log('   debugPopularSystem() - Sistem durumunu kontrol et');
-   console.log('   forceShowPopular() - Popüler popup\'ı zorla aç');
-   console.log('   Ctrl+Shift+P - Popüler uygulamaları aç');
-   console.log('   Ctrl+Shift+T - Butonu test et');
-    </script>
+
+        listEl.appendChild(card);
+    });
+}
+
+/* ═══════════════════════  SEARCH  ═══════════════════════ */
+const sorted = [...apps].sort((a, b) => a.name.localeCompare(b.name, 'tr'));
+renderCards(sorted);
+
+document.getElementById('search').addEventListener('input', e => {
+    const q = e.target.value.trim().toLowerCase();
+    renderCards(q ? sorted.filter(a => a.name.toLowerCase().includes(q)) : sorted);
+});
+
+/* ═══════════════════════  MODAL  ═══════════════════════ */
+const backdrop  = document.getElementById('modal-backdrop');
+const modalIcon = document.getElementById('modal-icon');
+const modalTitle= document.getElementById('modal-title');
+const modalBody = document.getElementById('modal-body');
+
+document.getElementById('modal-close').addEventListener('click', closeModal);
+backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function closeModal() {
+    backdrop.classList.remove('open');
+    modalBody.innerHTML = '';
+}
+
+function openModal(app, mode) {
+    // icon
+    modalIcon.innerHTML = '';
+    modalIcon.appendChild(createIcon(app, 48));
+
+    modalTitle.textContent = app.name;
+
+    if (mode === 'install') {
+        renderInstall(app);
+    } else {
+        renderInfo(app);
+    }
+
+    backdrop.classList.add('open');
+}
+
+/* ── INSTALL ── */
+function renderInstall(app) {
+    const distros = Object.keys(app.install);
+    let active = 0;
+
+    const tabs   = document.createElement('div');
+    tabs.className = 'tabs';
+
+    const content = document.createElement('div');
+
+    function switchTab(i) {
+        tabs.querySelectorAll('.tab-btn').forEach((b, j) => b.classList.toggle('active', i === j));
+        content.innerHTML = '';
+        const cmd = Object.values(app.install)[i];
+        const block = document.createElement('div');
+        block.className = 'code-block';
+        block.textContent = cmd;
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.textContent = 'kopyala';
+        copyBtn.onclick = () => {
+            navigator.clipboard.writeText(cmd).then(() => {
+                copyBtn.textContent = 'kopyalandı!';
+                setTimeout(() => copyBtn.textContent = 'kopyala', 1800);
+            });
+        };
+        block.appendChild(copyBtn);
+        content.appendChild(block);
+    }
+
+    distros.forEach((d, i) => {
+        const b = document.createElement('button');
+        b.className = 'tab-btn' + (i === 0 ? ' active' : '');
+        b.textContent = d;
+        b.onclick = () => switchTab(i);
+        tabs.appendChild(b);
+    });
+
+    modalBody.innerHTML = '';
+    modalBody.appendChild(tabs);
+    modalBody.appendChild(content);
+    switchTab(0);
+}
+
+/* ── INFO ── */
+function renderInfo(app) {
+    modalBody.innerHTML = '';
+
+    if (app.alternatives?.length) {
+        // Alternatives list
+        app.alternatives.forEach(alt => {
+            const el = document.createElement('div');
+            el.className = 'alt-item';
+            el.innerHTML = `<h4>${alt.name}</h4><p>${alt.desc}</p>
+                <a class="website-link" href="${alt.url}" target="_blank" rel="noopener">↗ Siteye git</a>`;
+            modalBody.appendChild(el);
+        });
+        return;
+    }
+
+    if (app.reason) {
+        const el = document.createElement('div');
+        el.className = 'reason-block';
+        el.textContent = app.reason;
+        modalBody.appendChild(el);
+        if (app.about?.website) {
+            const link = document.createElement('a');
+            link.href = app.about.website;
+            link.target = '_blank';
+            link.rel = 'noopener';
+            link.className = 'website-link';
+            link.style.marginTop = '1rem';
+            link.textContent = '↗ Resmi site';
+            modalBody.appendChild(link);
+        }
+        return;
+    }
+
+    // Supported app → screenshot tabs
+    const tabs    = document.createElement('div');
+    tabs.className = 'tabs';
+
+    const btnSS   = makeTab('Ekran Görüntüsü', true);
+    const btnSite = makeTab('Web Sitesi', false);
+    tabs.append(btnSS, btnSite);
+
+    const content = document.createElement('div');
+
+    function makeTab(label, active) {
+        const b = document.createElement('button');
+        b.className = 'tab-btn' + (active ? ' active' : '');
+        b.textContent = label;
+        return b;
+    }
+
+    function setActive(sel) {
+        [btnSS, btnSite].forEach(b => b.classList.toggle('active', b === sel));
+    }
+
+    btnSS.onclick = () => {
+        setActive(btnSS);
+        content.innerHTML = '';
+        if (app.about?.screenshot) {
+            const wrap = document.createElement('div');
+            wrap.className = 'screenshot-wrap';
+            const img = document.createElement('img');
+            img.src = app.about.screenshot;
+            img.alt = app.name;
+            img.onerror = () => { wrap.innerHTML = '<div class="no-ss">Ekran görüntüsü bulunamadı.</div>'; };
+            wrap.appendChild(img);
+            content.appendChild(wrap);
+        } else {
+            content.innerHTML = '<div class="screenshot-wrap"><div class="no-ss">Bu uygulama için henüz ekran görüntüsü eklenmedi.</div></div>';
+        }
+    };
+
+    btnSite.onclick = () => {
+        setActive(btnSite);
+        content.innerHTML = '';
+        if (app.about?.website) {
+            const a = document.createElement('a');
+            a.href = app.about.website;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.className = 'website-link';
+            a.textContent = '↗ ' + app.about.website;
+            content.appendChild(a);
+        }
+    };
+
+    modalBody.appendChild(tabs);
+    modalBody.appendChild(content);
+    btnSS.click();
+}
+</script>
 </body>
 </html>
